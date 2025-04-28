@@ -4,6 +4,11 @@ version = "1.0.0"
 edition = "2024"
 description = "Conway's Game of Life file format converter"
 authors = ["Andrea Marano <andreamarano2004@gmail.com>"]
+readme = "README.md"
+license = "MIT"
+homepage = "https://github.com/LuMarans30/rletxtconv"
+categories = ["command-line-utilities", "parser-implementations"]
+keywords = ["conway", "rle", "plaintext", "parser"]
 
 [lib]
 name = "rletxtconv"
