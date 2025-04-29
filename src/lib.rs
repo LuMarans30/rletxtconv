@@ -53,13 +53,13 @@ pub fn detect_format(content: &str) -> Result<Format> {
 /// Parses a file and returns its format and the grid of cells (Universe)
 pub fn parse_file(input_path: &Path) -> Result<(Format, Universe)> {
     let content = fs::read_to_string(input_path)?;
-    parse_text(content)
+    parse_text(content.as_str())
 }
 
 /// Parses a string and returns its format and the grid of cells (Universe)
-pub fn parse_text(input: String) -> Result<(Format, Universe)> {
-    let input_format = detect_format(&input)?;
-    Ok((input_format, formats::parse(&input, input_format)?))
+pub fn parse_text(input: &str) -> Result<(Format, Universe)> {
+    let input_format = detect_format(input)?;
+    Ok((input_format, formats::parse(input, input_format)?))
 }
 
 /// Convert a file from one format to another
