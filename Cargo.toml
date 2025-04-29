@@ -1,6 +1,6 @@
 [package]
 name = "rletxtconv"
-version = "1.1.0"
+version = "1.2.0"
 edition = "2024"
 description = "Conway's Game of Life file format converter"
 authors = ["Andrea Marano <andreamarano2004@gmail.com>"]
