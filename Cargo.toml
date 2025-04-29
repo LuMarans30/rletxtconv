@@ -20,7 +20,6 @@ path = "src/main.rs"
 
 [dependencies]
 clap = { version = "4.5.37", features = ["derive"] }
-color-eyre = "0.6.3"
 lazy_static = "1.5.0"
 regex = "1.11.1"
 thiserror = "2.0.12"

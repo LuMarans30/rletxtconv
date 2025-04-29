@@ -21,10 +21,6 @@ struct Args {
 }
 
 fn main() -> Result<()> {
-    // Setup better panic messages in debug mode
-    #[cfg(debug_assertions)]
-    color_eyre::install().expect("Cannot initialize color_eyre");
-
     let args = Args::parse();
 
     if args.output.exists() && !args.force {
