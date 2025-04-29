@@ -1,6 +1,6 @@
 // lib.rs
 use std::{
-    fs::{self, File},
+    fs::{self, OpenOptions},
     io,
     path::Path,
 };
@@ -9,6 +9,7 @@ use thiserror::Error;
 
 pub mod formats;
 pub use formats::Format;
+use universe::Universe;
 pub mod universe;
 
 #[derive(Error, Debug)]
@@ -49,39 +50,38 @@ pub fn detect_format(content: &str) -> Result<Format> {
     ))
 }
 
-/// Convert a file from one format to another
-pub fn convert_file(input_path: &Path, output_path: &Path, force: bool) -> Result<()> {
-    if !input_path.exists() {
-        return Err(ConwayError::Io(io::Error::new(
-            io::ErrorKind::NotFound,
-            "Input file does not exist",
-        )));
-    }
-
-    if output_path.exists() && !force {
-        return Err(ConwayError::Io(io::Error::new(
-            io::ErrorKind::AlreadyExists,
-            "Output file already exists",
-        )));
-    }
-
+/// Parses a file and returns its format and the grid of cells (Universe)
+pub fn parse_file(input_path: &Path) -> Result<(Format, Universe)> {
     let content = fs::read_to_string(input_path)?;
     let input_format = detect_format(&content)?;
+    Ok((input_format, formats::parse(&content, input_format)?))
+}
 
-    let universe = formats::parse(&content, input_format)?;
+/// Convert a file from one format to another
+pub fn convert_file(input_path: &Path, output_path: &Path, force: bool) -> Result<()> {
+    let mut open_options = OpenOptions::new();
+    let open_options = open_options
+        .write(true)
+        .create(force)
+        .truncate(force)
+        .create_new(!force);
+
+    let mut output_file = open_options.open(output_path)?;
+
+    let (input_format, universe) = parse_file(input_path)?;
+
     let target_format = match input_format {
         Format::Rle => Format::Plaintext,
         Format::Plaintext => Format::Rle,
     };
 
-    let mut output_file = File::create(output_path)?;
     formats::write(&universe, &mut output_file, target_format)?;
 
     Ok(())
 }
 
 /// Removes comment lines from the pattern starting with the specified character
-fn filter_comment_lines(content: &str, starting_char: char) -> Vec<&str> {
+pub(crate) fn filter_comment_lines(content: &str, starting_char: char) -> Vec<&str> {
     content
         .lines()
         .map(str::trim)
