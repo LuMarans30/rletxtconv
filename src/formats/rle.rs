@@ -41,7 +41,7 @@ pub fn parse(content: &str) -> Result<Universe> {
                     1
                 } else {
                     count_str.parse().map_err(|e| {
-                        ConwayError::Parsing(format!("Invalid count before $: {}", e))
+                        ConwayError::Parsing(format!("Invalid count before $: {e}"))
                     })?
                 };
                 count_str.clear();
@@ -147,7 +147,7 @@ fn write_run(
         *line_length = 0;
     }
 
-    write!(writer, "{}", output)?;
+    write!(writer, "{output}")?;
     *line_length += output.len();
 
     Ok(())
@@ -160,7 +160,7 @@ fn write_symbol(writer: &mut dyn Write, symbol: char, line_length: &mut usize) -
         *line_length = 0;
     }
 
-    write!(writer, "{}", symbol)?;
+    write!(writer, "{symbol}")?;
     *line_length += 1;
 
     Ok(())
