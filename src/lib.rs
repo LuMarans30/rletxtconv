@@ -38,11 +38,11 @@ pub fn detect_format(content: &str) -> Result<Format> {
             continue;
         }
 
-        if formats::rle::is_valid_header(trimmed) {
-            return Ok(Format::Rle);
-        }
-
-        return Ok(Format::Plaintext);
+        return if formats::rle::is_valid_header(trimmed) {
+            Ok(Format::Rle)
+        } else {
+            Ok(Format::Plaintext)
+        };
     }
 
     Err(ConwayError::FormatDetection(
